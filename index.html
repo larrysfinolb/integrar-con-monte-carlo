@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Integrando con el Metodo de Monte Carlo</title>
+    <style>
+      main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+      }
+
+      main > div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+      }
+
+      h1 {
+        text-transform: uppercase;
+      }
+
+      math {
+        font-size: 1.5rem;
+      }
+
+      label {
+        font-size: 1rem;
+        font-weight: bold;
+        text-align: center;
+        width: 100%;
+        max-width: 500px;
+      }
+
+      input {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: 1px solid #000;
+        font-size: 1rem;
+      }
+
+      button {
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        border: none;
+        background-color: #000;
+        color: #fff;
+        font-size: 1rem;
+        cursor: pointer;
+      }
+
+      span {
+        text-align: center;
+        font-size: 0.75rem;
+        font-style: italic;
+        color: #aaa;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div>
+        <h1>Integrando con el Metodo de Monte Carlo</h1>
+        <math>
+          <mrow>
+            <msubsup>
+              <mo>&#x222B;<!--Integral --></mo>
+              <mn>2</mn>
+              <mn>3</mn>
+            </msubsup>
+            <mrow>
+              <mn>3</mn>
+              <msup>
+                <mi>x</mi>
+                <mn>2</mn>
+              </msup>
+            </mrow>
+            <mo>+</mo>
+            <mrow>
+              <mn>2</mn>
+              <mi>x</mi>
+            </mrow>
+            <mi>dx</mi>
+          </mrow>
+        </math>
+        <label for="numSimulates">Ingrese el número de simulaciones que desea emplear:</label>
+        <input id="numSimulates" type="number" min="1" step="1" value="10000" />
+        <button onclick="simulate()">Iniciar simulaciones</button>
+        <p id="result">Aun no haz realizado las simulaciones</p>
+        <span>
+          Simulación de Sistemas N1113 <br />
+          Profesor Luis Fernandez <br />
+          Realizado por: Larry Finol 30.770.477
+        </span>
+      </div>
+    </main>
+
+    <script>
+      // Función que define la integral
+      const f = (x) => {
+        return 3 * Math.pow(x, 2) + 2 * x;
+      };
+
+      // Función que calcula el valor real de la integral
+      const realValue = () => {
+        return (
+          3 * (Math.pow(3, 3) / 3) + 2 * (Math.pow(3, 2) / 2) - (3 * (Math.pow(2, 3) / 3) + 2 * (Math.pow(2, 2) / 2))
+        );
+      };
+
+      // Función que calcula el valor aproximado de la integral usando el método de Monte Carlo
+      const integralWithMonteCarlo = (numSimulates) => {
+        // Generar n puntos aleatorios entre 2 y 3
+        const points = [];
+        for (let i = 0; i < numSimulates; i++) {
+          const x = Math.random() * (3 - 2) + 2;
+          points.push(x);
+        }
+        // Calcular la suma de los valores de la función en los puntos
+        let sum = 0;
+        for (let i = 0; i < numSimulates; i++) {
+          sum += f(points[i]);
+        }
+        // Multiplicar la suma por el ancho del intervalo y dividir por n
+        const area = ((3 - 2) * sum) / numSimulates;
+        return area;
+      };
+
+      const simulate = () => {
+        // Obtener el número de simulaciones del input
+        const numSimulates = parseInt(document.getElementById('numSimulates').value);
+
+        if (numSimulates > 0) {
+          const real = realValue();
+          const approx = integralWithMonteCarlo(numSimulates);
+          const err = Math.abs(((real - approx) / real) * 100);
+
+          document.getElementById('result').innerHTML = `Resultado Matematico de la integral: ${real.toFixed(2)} <br>`;
+          document.getElementById(
+            'result'
+          ).innerHTML += `Resultado Aproximado de la Integral por el metodo de Monte Carlo: ${approx.toFixed(2)} <br>`;
+          document.getElementById(
+            'result'
+          ).innerHTML += `Porcentaje (%) de error entre valor real (matematico) y el valor aproximado obtenido de la simulación: ${err.toFixed(
+            2
+          )}%`;
+        } else {
+          document.getElementById('result').innerHTML = 'Por favor ingrese un número positivo y mayor que cero.';
+        }
+      };
+    </script>
+  </body>
+</html>
