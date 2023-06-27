@@ -63,6 +63,7 @@
       }
     </style>
   </head>
+
   <body>
     <main>
       <div>
@@ -70,7 +71,10 @@
         <math>
           <mrow>
             <msubsup>
-              <mo>&#x222B;<!--Integral --></mo>
+              <mo
+                >&#x222B;
+                <!--Integral -->
+              </mo>
               <mn>2</mn>
               <mn>3</mn>
             </msubsup>
@@ -139,9 +143,13 @@
         if (numSimulates > 0) {
           const real = realValue();
           const approx = integralWithMonteCarlo(numSimulates);
-          const err = Math.abs(((real - approx) / real) * 100);
+          let err = ((real - approx) / real) * 100;
 
-          document.getElementById('result').innerHTML = `Resultado Matematico de la integral: ${real.toFixed(2)} <br>`;
+          if (real == approx.toFixed(2)) {
+            err = 0;
+          }
+
+          document.getElementById('result').innerHTML = `Resultado Matematico de la integral: ${real} <br>`;
           document.getElementById(
             'result'
           ).innerHTML += `Resultado Aproximado de la Integral por el metodo de Monte Carlo: ${approx.toFixed(2)} <br>`;
